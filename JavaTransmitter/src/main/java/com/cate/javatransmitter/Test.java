@@ -42,7 +42,7 @@ public class Test {
         int size = 125;
         String fileType = "png";
         File myFile = new File(filePath);
-        int[] toEncode={1,0,0,0,0,0,0,0,0,0};
+        int[] toEncode={255,0,0,0,0,0,0,0,0,0};
         int ecBytes=5;
         //  RS encoder
         ReedSolomonEncoder rsEncoder;
