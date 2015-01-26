@@ -80,6 +80,7 @@ public class Test {
         byte[] bFI = bGen.bytesFromImage();
         bGen.setData(bFI);
         bGen.generateImage();
+        bGen.modulateData(toEncode);
         
         //
         //System.out.println("FFT Data = " + Arrays.toString(floats));

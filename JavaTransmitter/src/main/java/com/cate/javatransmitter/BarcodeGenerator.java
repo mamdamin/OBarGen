@@ -34,6 +34,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import java.awt.image.*;
+import com.cate.javatransmitter.ComplexMatrix;
+
 /**
  *
  * @author Amin
@@ -50,6 +52,25 @@ public class BarcodeGenerator {
 
     public void setParams(){
         
+    }
+    
+    // Puts adjacent data bits which are differntially modulated on 
+    // adjacent elements of a complex matrix;
+    private ComplexMatrix modulateATile(int[] data,int height,int width){
+        ComplexMatrix tile = new ComplexMatrix(width,height);
+            /*for(int i=0;i<width;i++)
+                for(int j=0;j<2*width;j++)*/
+                    tile.setElement(0,0,0,data[0]);
+        return tile;
+    }
+    //Take care of putting tiles together and DFT
+    public void modulateData(int[] data){
+        int columns   = 3;
+        int rows  = 3;
+        ComplexMatrix tile = new ComplexMatrix(rows,columns);
+        tile.clearData();
+        tile = this.modulateATile(data, rows, columns);
+        columns = 3;
     }
     
     public void generateImage(){
