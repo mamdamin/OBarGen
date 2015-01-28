@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package test;
+package com.cate.javatransmitter;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -57,16 +57,38 @@ public class BarcodeGenerator {
     // Puts adjacent data bits which are differntially modulated on 
     // adjacent elements of a complex matrix;
     private ComplexMatrix modulateATile(int[] data,int height,int width){
-        ComplexMatrix tile = new ComplexMatrix(width,height);
-            /*for(int i=0;i<width;i++)
-                for(int j=0;j<2*width;j++)*/
-                    tile.setElement(0,0,0,data[0]);
+        ComplexMatrix tile = new ComplexMatrix(height,width);
+        tile.setElement(0,0,0,1);
+        int dataIndex = 0; 
+        // Implement various lines on a tile
+        for(int r=1;r<width;r+=2){
+            for(int j=0;j<r;j++){
+                tile.setElement(r,j,0,data[dataIndex]);
+                dataIndex++;
+            }
+        
+            for(int i=r-1;i>=0;i--){
+                tile.setElement(i,r,0,data[dataIndex]);
+                dataIndex++;
+            }            
+            
+            for(int i=0;i<r+1;i++){
+                tile.setElement(i,r+1,0,data[dataIndex]);
+                dataIndex++;
+            } 
+
+            for(int j=r;j>=0;j--){
+                tile.setElement(r+1,j,0,data[dataIndex]);
+                dataIndex++;
+            }            
+            
+        }
         return tile;
     }
     //Take care of putting tiles together and DFT
     public void modulateData(int[] data){
-        int columns   = 3;
-        int rows  = 3;
+        int columns   = 5;
+        int rows  = 5;
         ComplexMatrix tile = new ComplexMatrix(rows,columns);
         tile.clearData();
         tile = this.modulateATile(data, rows, columns);

@@ -32,14 +32,17 @@ public class ComplexMatrix {
     int height;
     public int[][] complexData;
     public ComplexMatrix(int height,int width){
-        width = this.width;
-        height= this.height;
+        this.width = width;
+        this.height= height;
         complexData = new int[height][2*width];
     }
     
     public void setElement(int i,int j, int real, int imag){
-        this.complexData[i][j]   = real;
-        this.complexData[i][j]   = imag;
+        try {
+            this.complexData[i][j] = real;
+            this.complexData[i][j] = imag;
+        } catch (Exception e) {
+        }
     }
     
     public void clearData(){

@@ -1,4 +1,4 @@
-package test;
+package com.cate.javatransmitter;
 
 
 import java.util.Arrays; 
@@ -23,8 +23,8 @@ import com.google.zxing.common.reedsolomon.ReedSolomonException;
 
 import org.jtransforms.fft.FloatFFT_2D;
 
-import test.SwingContainer;
-import test.BarcodeGenerator;
+import com.cate.javatransmitter.SwingContainer;
+import com.cate.javatransmitter.BarcodeGenerator;
 
 /**
 * @author Crunchify.com
@@ -35,6 +35,7 @@ public class Test {
  
         // Tutorial: http://zxing.org/w/docs/javadoc/index.html
  
+    @SuppressWarnings("empty-statement")
     public static void main(String[] args) throws ReedSolomonException {
         
         String myCodeText = "http://Crunchify.com/";
@@ -42,7 +43,7 @@ public class Test {
         int size = 125;
         String fileType = "png";
         File myFile = new File(filePath);
-        int[] toEncode={255,0,0,0,0,0,0,0,0,0};
+        int[] toEncode={255,0,0,0,0,0,0,0,0,0,0,0};
         int ecBytes=5;
         //  RS encoder
         ReedSolomonEncoder rsEncoder;
@@ -80,7 +81,8 @@ public class Test {
         byte[] bFI = bGen.bytesFromImage();
         bGen.setData(bFI);
         bGen.generateImage();
-        bGen.modulateData(toEncode);
+        int[] toEncode1 = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21};
+        bGen.modulateData(toEncode1);
         
         //
         //System.out.println("FFT Data = " + Arrays.toString(floats));
