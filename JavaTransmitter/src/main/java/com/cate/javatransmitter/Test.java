@@ -23,9 +23,6 @@ import com.google.zxing.common.reedsolomon.ReedSolomonException;
 
 import org.jtransforms.fft.FloatFFT_2D;
 
-import com.cate.javatransmitter.SwingContainer;
-import com.cate.javatransmitter.BarcodeGenerator;
-
 /**
 * @author Crunchify.com
 */

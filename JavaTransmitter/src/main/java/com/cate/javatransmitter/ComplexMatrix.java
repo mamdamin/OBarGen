@@ -39,8 +39,8 @@ public class ComplexMatrix {
     
     public void setElement(int i,int j, int real, int imag){
         try {
-            this.complexData[i][j] = real;
-            this.complexData[i][j] = imag;
+            this.complexData[i][2*j] = real;
+            this.complexData[i][2*j+1] = imag;
         } catch (Exception e) {
         }
     }
@@ -49,5 +49,13 @@ public class ComplexMatrix {
         for(int i=0;i<height;i++)
             for(int j=0;j<2*width;j++)
                 this.complexData[i][j] = 0;
+    }
+
+
+    public void rotate(){
+        for(int i=0;i<height;i++)
+            for(int j=0;j<2*width;j++)
+                this.complexData[i][j] = 0;
+        
     }
 }
