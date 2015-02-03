@@ -36,6 +36,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.*;
 import com.cate.javatransmitter.ComplexMatrix;
 import java.lang.Math;
+import org.jtransforms.fft.FloatFFT_2D;
 
 /**
  *
@@ -90,7 +91,7 @@ public class BarcodeGenerator {
         // Implement various lines on 2nd tile
         //Test
         System.out.println("NEXT");
-        tile.setElement(1,width,0,1);
+        tile.setElement(1,width-1,0,1);
         for(int r=2;r<=nRows;r+=2){
             for(int j=1;j<r;j++){
                 tile.setElement(r,width-j,0,data[dataIndex]);
@@ -103,7 +104,7 @@ public class BarcodeGenerator {
             }            
             
             for(int i=1;i<r+1;i++){
-                tile.setElement(i,width-r+1,0,data[dataIndex]);
+                tile.setElement(i,width-r-1,0,data[dataIndex]);
                 dataIndex++;
             } 
 
@@ -120,14 +121,18 @@ public class BarcodeGenerator {
     }
     //Take care of putting tiles together and DFT
     public void modulateData(int[] data){
-        int columns   = 20;
-        int rows  = 20;
+        int columns   = 512;
+        int rows  = 512;
         ComplexMatrix tile = new ComplexMatrix(rows,columns);
         tile.clearData();
-        int nRows = (int)(Math.sqrt((4*data.length)+1)-1)/2;
-        nRows = 4;
+        int nRows = (int)(Math.sqrt((4*data.length)+1)-1)/4;
+        //nRows = 4;
         tile = this.modulateATile(data, rows, columns, nRows);
-
+        FloatFFT_2D fft;        
+        fft = new FloatFFT_2D(rows,columns);
+        fft.complexForward(tile.complexData);
+        float[][] image = tile.getRealData();
+        //TODO Clipp Image
     }
     
     public void generateImage(){

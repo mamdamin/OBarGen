@@ -30,11 +30,13 @@ package com.cate.javatransmitter;
 public class ComplexMatrix {
     int width;
     int height;
-    public int[][] complexData;
+    public float[][] complexData;
+    private final float[][] realData;
     public ComplexMatrix(int height,int width){
         this.width = width;
         this.height= height;
-        complexData = new int[height][2*width];
+        complexData = new float[height][2*width];
+        realData = new float[height][width];
     }
     
     public void setElement(int i,int j, int real, int imag){
@@ -42,7 +44,12 @@ public class ComplexMatrix {
             this.complexData[i][2*j] = real;
             this.complexData[i][2*j+1] = imag;
             //Test
-            System.out.println(Integer.toString(i)+","+Integer.toString(j)+"="+Integer.toString(imag));
+            i = height - i;
+            j = width  - j;
+            this.complexData[i][2*j] = real;
+            this.complexData[i][2*j+1] = -imag;
+            
+            System.out.println(Integer.toString(i)+","+Integer.toString(j)+"="+Integer.toString(-imag));
         } catch (Exception e) {
         }
     }
@@ -57,7 +64,7 @@ public class ComplexMatrix {
         Mirror a ComplexMatrix around diagonal
      */
     public void mirror(){
-        int tmp1, tmp2;
+        float tmp1, tmp2;
         for(int i=0;i<height;i++)
             for(int j=i;j<width;j++){
                 tmp1 = this.complexData[i][j];
@@ -65,5 +72,12 @@ public class ComplexMatrix {
                 this.complexData[i][j] = tmp2;
                 this.complexData[j][i] = tmp1;
             }
+    }
+    
+    public float[][] getRealData(){
+        for(int i=0;i<height;i++)
+            for(int j=0;j<width;j++)
+                realData[i][j] = this.complexData[i][2*j];
+        return realData;
     }
 }
