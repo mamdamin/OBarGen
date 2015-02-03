@@ -41,6 +41,8 @@ public class ComplexMatrix {
         try {
             this.complexData[i][2*j] = real;
             this.complexData[i][2*j+1] = imag;
+            //Test
+            System.out.println(Integer.toString(i)+","+Integer.toString(j)+"="+Integer.toString(imag));
         } catch (Exception e) {
         }
     }
@@ -51,11 +53,17 @@ public class ComplexMatrix {
                 this.complexData[i][j] = 0;
     }
 
-
-    public void rotate(){
+    /**
+        Mirror a ComplexMatrix around diagonal
+     */
+    public void mirror(){
+        int tmp1, tmp2;
         for(int i=0;i<height;i++)
-            for(int j=0;j<2*width;j++)
-                this.complexData[i][j] = 0;
-        
+            for(int j=i;j<width;j++){
+                tmp1 = this.complexData[i][j];
+                tmp2 = this.complexData[j][i];
+                this.complexData[i][j] = tmp2;
+                this.complexData[j][i] = tmp1;
+            }
     }
 }

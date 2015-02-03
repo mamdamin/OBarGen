@@ -59,41 +59,73 @@ public class BarcodeGenerator {
     // adjacent elements of a complex matrix;
     private ComplexMatrix modulateATile(int[] data,int height,int width, int nRows){
         ComplexMatrix tile = new ComplexMatrix(height,width);
-        tile.setElement(0,0,0,1);
+        tile.setElement(1,1,0,1);
         int dataIndex = 0;
+        nRows++;    // First Row is reserved all zero 
 
-        // Implement various lines on a tile
-        for(int r=1;r<width;r+=nRows){
-            for(int j=0;j<r;j++){
+        // Implement various lines on 1st tile
+        for(int r=2;r<=nRows;r+=2){
+            for(int j=1;j<r;j++){
                 tile.setElement(r,j,0,data[dataIndex]);
                 dataIndex++;
             }
         
-            for(int i=r-1;i>=0;i--){
+            for(int i=r-1;i>0;i--){
                 tile.setElement(i,r,0,data[dataIndex]);
                 dataIndex++;
             }            
             
-            for(int i=0;i<r+1;i++){
+            for(int i=1;i<r+1;i++){
                 tile.setElement(i,r+1,0,data[dataIndex]);
                 dataIndex++;
             } 
 
-            for(int j=r;j>=0;j--){
+            for(int j=r;j>0;j--){
                 tile.setElement(r+1,j,0,data[dataIndex]);
                 dataIndex++;
             }            
             
         }
+
+        // Implement various lines on 2nd tile
+        //Test
+        System.out.println("NEXT");
+        tile.setElement(1,width,0,1);
+        for(int r=2;r<=nRows;r+=2){
+            for(int j=1;j<r;j++){
+                tile.setElement(r,width-j,0,data[dataIndex]);
+                dataIndex++;
+            }
+        
+            for(int i=r-1;i>0;i--){
+                tile.setElement(i,width-r,0,data[dataIndex]);
+                dataIndex++;
+            }            
+            
+            for(int i=1;i<r+1;i++){
+                tile.setElement(i,width-r+1,0,data[dataIndex]);
+                dataIndex++;
+            } 
+
+            for(int j=r;j>0;j--){
+                tile.setElement(r+1,width-j,0,data[dataIndex]);
+                dataIndex++;
+            }            
+            
+        }        
+        
+        
+        
         return tile;
     }
     //Take care of putting tiles together and DFT
     public void modulateData(int[] data){
-        int columns   = 5;
-        int rows  = 5;
+        int columns   = 20;
+        int rows  = 20;
         ComplexMatrix tile = new ComplexMatrix(rows,columns);
         tile.clearData();
-        int nRows = (int) (1+Math.sqrt(4*data.length+1))/2;
+        int nRows = (int)(Math.sqrt((4*data.length)+1)-1)/2;
+        nRows = 4;
         tile = this.modulateATile(data, rows, columns, nRows);
 
     }
