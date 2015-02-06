@@ -71,7 +71,7 @@ public class Test {
         
         SwingContainer  swingContainer = new SwingContainer();  
         swingContainer.showJPanelDemo();
-        //swingContainer.showBarcode();
+        
         
         // Generate Barcode
         BarcodeGenerator bGen = new BarcodeGenerator();
@@ -79,8 +79,7 @@ public class Test {
         bGen.setData(bFI);
         bGen.generateImage();
         int[] toEncode1 = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
-        bGen.modulateData(toEncode1);
-        
+        swingContainer.showBarcode(bGen.modulateData(toEncode1));
         //
         //System.out.println("FFT Data = " + Arrays.toString(floats));
         /*

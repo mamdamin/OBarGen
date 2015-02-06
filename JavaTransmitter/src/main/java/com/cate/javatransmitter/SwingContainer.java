@@ -71,7 +71,7 @@ public class SwingContainer {
    }   
 
 
-public void showBarcode(){
+public void showBarcode(BufferedImage barcode){
     BufferedImage img=null;
     URL google = null;
       try {
@@ -112,19 +112,20 @@ public void showBarcode(){
 
       mainFrame.setVisible(true);
       Timer timer;
-      for (int i=0;i<100;i++){
-        picLabel.setIcon(new ImageIcon(myPicture2));
-          try {
-              Thread.sleep(100);
-          } catch (InterruptedException ex) {
-              Logger.getLogger(SwingContainer.class.getName()).log(Level.SEVERE, null, ex);
-          }
-        picLabel.setIcon(new ImageIcon(myPicture1));
-          try {
-              Thread.sleep(100);
-          } catch (InterruptedException ex) {
-              Logger.getLogger(SwingContainer.class.getName()).log(Level.SEVERE, null, ex);
-          }        
-        }
+//      for (int i=0;i<100;i++){
+//        picLabel.setIcon(new ImageIcon(barcode));
+//          try {
+//              Thread.sleep(100);
+//          } catch (InterruptedException ex) {
+//              Logger.getLogger(SwingContainer.class.getName()).log(Level.SEVERE, null, ex);
+//          }
+//        picLabel.setIcon(new ImageIcon(myPicture1));
+//          try {
+//              Thread.sleep(100);
+//          } catch (InterruptedException ex) {
+//              Logger.getLogger(SwingContainer.class.getName()).log(Level.SEVERE, null, ex);
+//          }        
+//        }
+    picLabel.setIcon(new ImageIcon(barcode));
     }
 }

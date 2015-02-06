@@ -23,6 +23,8 @@
  */
 package com.cate.javatransmitter;
 
+import java.awt.image.BufferedImage;
+
 /**
  *
  * @author Amin
@@ -31,12 +33,13 @@ public class ComplexMatrix {
     int width;
     int height;
     public float[][] complexData;
-    private final float[][] realData;
+    private final BufferedImage imageData;
     public ComplexMatrix(int height,int width){
         this.width = width;
         this.height= height;
         complexData = new float[height][2*width];
-        realData = new float[height][width];
+        imageData = new BufferedImage(height,width,BufferedImage.TYPE_USHORT_GRAY);
+        
     }
     
     public void setElement(int i,int j, int real, int imag){
@@ -74,10 +77,10 @@ public class ComplexMatrix {
             }
     }
     
-    public float[][] getRealData(){
+    public BufferedImage getBufferedImage(){
         for(int i=0;i<height;i++)
             for(int j=0;j<width;j++)
-                realData[i][j] = this.complexData[i][2*j];
-        return realData;
+                imageData.setRGB(i, j, (int) this.complexData[i][2*j]);
+        return imageData;
     }
 }

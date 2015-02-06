@@ -34,7 +34,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import java.awt.image.*;
-import com.cate.javatransmitter.ComplexMatrix;
 import java.lang.Math;
 import org.jtransforms.fft.FloatFFT_2D;
 
@@ -56,85 +55,33 @@ public class BarcodeGenerator {
         
     }
     
-    // Puts adjacent data bits which are differntially modulated on 
-    // adjacent elements of a complex matrix;
-    private ComplexMatrix modulateATile(int[] data,int height,int width, int nRows){
-        ComplexMatrix tile = new ComplexMatrix(height,width);
-        tile.setElement(1,1,0,1);
-        int dataIndex = 0;
-        nRows++;    // First Row is reserved all zero 
 
-        // Implement various lines on 1st tile
-        for(int r=2;r<=nRows;r+=2){
-            for(int j=1;j<r;j++){
-                tile.setElement(r,j,0,data[dataIndex]);
-                dataIndex++;
-            }
-        
-            for(int i=r-1;i>0;i--){
-                tile.setElement(i,r,0,data[dataIndex]);
-                dataIndex++;
-            }            
-            
-            for(int i=1;i<r+1;i++){
-                tile.setElement(i,r+1,0,data[dataIndex]);
-                dataIndex++;
-            } 
-
-            for(int j=r;j>0;j--){
-                tile.setElement(r+1,j,0,data[dataIndex]);
-                dataIndex++;
-            }            
-            
-        }
-
-        // Implement various lines on 2nd tile
-        //Test
-        System.out.println("NEXT");
-        tile.setElement(1,width-1,0,1);
-        for(int r=2;r<=nRows;r+=2){
-            for(int j=1;j<r;j++){
-                tile.setElement(r,width-j,0,data[dataIndex]);
-                dataIndex++;
-            }
-        
-            for(int i=r-1;i>0;i--){
-                tile.setElement(i,width-r,0,data[dataIndex]);
-                dataIndex++;
-            }            
-            
-            for(int i=1;i<r+1;i++){
-                tile.setElement(i,width-r-1,0,data[dataIndex]);
-                dataIndex++;
-            } 
-
-            for(int j=r;j>0;j--){
-                tile.setElement(r+1,width-j,0,data[dataIndex]);
-                dataIndex++;
-            }            
-            
-        }        
-        
-        
-        
-        return tile;
-    }
     //Take care of putting tiles together and DFT
-    public void modulateData(int[] data){
+    public BufferedImage modulateData(int[] data){
         int columns   = 512;
         int rows  = 512;
         ComplexMatrix tile = new ComplexMatrix(rows,columns);
         tile.clearData();
         int nRows = (int)(Math.sqrt((4*data.length)+1)-1)/4;
         //nRows = 4;
-        tile = this.modulateATile(data, rows, columns, nRows);
+        tile = HermitianModulator.hermitianModulator(data, rows, columns, nRows);
         FloatFFT_2D fft;        
         fft = new FloatFFT_2D(rows,columns);
         fft.complexForward(tile.complexData);
-        float[][] image = tile.getRealData();
+        BufferedImage image = tile.getBufferedImage();
+        return image;
         //TODO Clipp Image
     }
     
+    private int[][] createFrame(int rows,int columns){
+        int finderSize = 9;
+        int[][] finderPattern = new int[finderSize][finderSize];
+        int[][] imageFrame = new int[rows][columns];
+        
+        
+    return null;
+    }
+
     public void generateImage(){
         InputStream in = new ByteArrayInputStream(inputData);
         try {
