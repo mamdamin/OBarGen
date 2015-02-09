@@ -36,14 +36,14 @@ public class ComplexMatrix {
     int width;
     int height;
     public float[][] complexData;
-    private final BufferedImage imageData;
-    private int[] realData;
+//    private final BufferedImage imageData;
+    private final int[] realData;
     
     public ComplexMatrix(int height,int width){
         this.width = width;
         this.height= height;
         complexData = new float[height][2*width];
-        imageData = new BufferedImage(height,width,BufferedImage.TYPE_BYTE_GRAY);
+//        imageData = new BufferedImage(height,width,BufferedImage.TYPE_BYTE_GRAY);
         realData = new int[height*width];
         
     }
@@ -95,7 +95,7 @@ public class ComplexMatrix {
     // Convert IFFT output into 1D Real Data for Raster
     private int[] getRealData(){
         int counter= 0;
-        for(int i=0;i<height-1;i++)
+        for(int i=0;i<height;i++)
             for(int j=0;j<width;j++)
                 realData[counter++] = Math.abs((byte) this.complexData[i][2*j]);
         return realData;
