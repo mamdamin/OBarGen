@@ -23,7 +23,10 @@
  */
 package com.cate.javatransmitter;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
+import java.lang.Math;
 
 /**
  *
@@ -34,11 +37,14 @@ public class ComplexMatrix {
     int height;
     public float[][] complexData;
     private final BufferedImage imageData;
+    private int[] realData;
+    
     public ComplexMatrix(int height,int width){
         this.width = width;
         this.height= height;
         complexData = new float[height][2*width];
-        imageData = new BufferedImage(height,width,BufferedImage.TYPE_USHORT_GRAY);
+        imageData = new BufferedImage(height,width,BufferedImage.TYPE_BYTE_GRAY);
+        realData = new int[height*width];
         
     }
     
@@ -78,9 +84,21 @@ public class ComplexMatrix {
     }
     
     public BufferedImage getBufferedImage(){
-        for(int i=0;i<height;i++)
-            for(int j=0;j<width;j++)
-                imageData.setRGB(i, j, (int) this.complexData[i][2*j]);
-        return imageData;
+        //color c = new Color();
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);        
+        WritableRaster raster = (WritableRaster) image.getData();
+        raster.setPixels(0, 0, width, height, this.getRealData());
+        image.setData(raster);
+    return image;
     }
+    
+    // Convert IFFT output into 1D Real Data for Raster
+    private int[] getRealData(){
+        int counter= 0;
+        for(int i=0;i<height-1;i++)
+            for(int j=0;j<width;j++)
+                realData[counter++] = Math.abs((byte) this.complexData[i][2*j]);
+        return realData;
+}
+    
 }
