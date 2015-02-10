@@ -66,8 +66,8 @@ public class SwingContainer {
       JPanel panel = new JPanel();
       panel.setBackground(Color.magenta);
       panel.setLayout(new FlowLayout());        
-      panel.add(msglabel);
-      controlPanel.add(panel);
+      //panel.add(msglabel);
+      //controlPanel.add(panel);
    }   
 
 
@@ -106,7 +106,7 @@ public void showBarcode(BufferedImage barcode){
        } catch (IOException ex) {
            Logger.getLogger(SwingContainer.class.getName()).log(Level.SEVERE, null, ex);
        }
-      JLabel picLabel = new JLabel("hi",new ImageIcon(myPicture1),JLabel.CENTER);
+      JLabel picLabel = new JLabel(new ImageIcon(myPicture1),JLabel.CENTER);
 
       controlPanel.add(picLabel);
 

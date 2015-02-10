@@ -24,6 +24,8 @@
 
 package com.cate.javatransmitter;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -36,6 +38,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.*;
 import java.lang.Math;
 import org.jtransforms.fft.FloatFFT_2D;
+import java.awt.image.SampleModel;
 
 /**
  *
@@ -43,8 +46,8 @@ import org.jtransforms.fft.FloatFFT_2D;
  */
 public class BarcodeGenerator {
     private byte[] inputData=null;
-    private int width;
-    private int height;
+    private int width = 128;
+    private int height = 128;
     
     
     public void setData(byte[] data){
@@ -58,8 +61,8 @@ public class BarcodeGenerator {
 
     //Take care of putting tiles together and DFT
     public BufferedImage modulateData(int[] data){
-        int columns   = 512;
-        int rows  = 512;
+        int columns   = 256;
+        int rows  = 256;
         ComplexMatrix tile = new ComplexMatrix(rows,columns);
         tile.clearData();
         int nRows = (int)(Math.sqrt((4*data.length)+1)-1)/4;
@@ -67,19 +70,43 @@ public class BarcodeGenerator {
         tile = HermitianModulator.hermitianModulator(data, rows, columns, nRows);
         FloatFFT_2D fft;        
         fft = new FloatFFT_2D(rows,columns);
-        fft.complexForward(tile.complexData);
-        BufferedImage image = tile.getBufferedImage();
+        fft.complexInverse(tile.complexData, false);
+//        BufferedImage image = tile.getBufferedImage();
+        BufferedImage image = createFrame(0,5);
         return image;
         //TODO Clipp Image
     }
     
-    private int[][] createFrame(int rows,int columns){
-        int finderSize = 9;
-        int[][] finderPattern = new int[finderSize][finderSize];
-        int[][] imageFrame = new int[rows][columns];
+    private BufferedImage createFrame(int cyclicPrefix, int finderScale){
+        int finderSize = finderScale*9;
+        int frameWidth  = width +2*cyclicPrefix+2*finderSize;
+        int frameHeight = height+2*cyclicPrefix+2*finderSize;
+        BufferedImage frame = new BufferedImage(frameWidth, frameHeight, BufferedImage.TYPE_BYTE_GRAY);
+        WritableRaster raster = frame.getRaster();
         
+        BufferedImage finderImage = new BufferedImage(finderSize, finderSize, BufferedImage.TYPE_BYTE_GRAY);
+        Graphics2D finderGraphic = finderImage.createGraphics();
+        finderGraphic.setBackground(Color.black);
+        finderGraphic.setPaint(Color.white);
+        finderGraphic.fillRect(0, 0, finderSize, finderSize);
+        finderGraphic.setPaint(Color.black);
+        finderGraphic.fillRect(finderScale, finderScale, finderSize-2*finderScale, finderSize-2*finderScale);
+        finderGraphic.setPaint(Color.white);
+        finderGraphic.fillRect(2*finderScale, 2*finderScale, finderSize-4*finderScale, finderSize-4*finderScale);
+        finderGraphic.setPaint(Color.black);
+        finderGraphic.fillRect(3*finderScale, 3*finderScale, finderSize-6*finderScale, finderSize-6*finderScale);
+        WritableRaster finderRaster = finderImage.getRaster();
         
-    return null;
+        raster.setRect(0, 0, finderRaster);
+        raster.setRect(width +cyclicPrefix+finderSize, 0, finderRaster);
+        raster.setRect(0, width +cyclicPrefix+finderSize, finderRaster);
+
+        
+        //int finderSize = 9;
+//        int[][] finderPattern = new int[finderSize][finderSize];
+//        int[][] imageFrame = new int[rows][columns];
+        
+    return frame;
     }
 
     public void generateImage(){
