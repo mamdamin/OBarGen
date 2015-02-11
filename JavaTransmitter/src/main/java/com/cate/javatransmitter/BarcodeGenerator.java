@@ -45,15 +45,17 @@ import java.awt.image.SampleModel;
  * @author Amin
  */
 public class BarcodeGenerator {
-    private byte[] inputData=null;
-    private int width = 128;
-    private int height = 128;
-    private FinderPattern finPat;   // Finder Pattern
+    private int[] inputData=null;
+    private final int width = 128;
+    private final int height = 128;
+    private final FinderPattern finPat;   // Finder Pattern
+    //private final BufferedImage barcodeImage = null;
+    
     public BarcodeGenerator(){
         finPat = new FinderPattern(2);
     }
     
-    public void setData(byte[] data){
+    public void setData(int[] data){
         inputData = data;
     }
 
@@ -61,16 +63,15 @@ public class BarcodeGenerator {
         
     }
     
-
     //Take care of putting tiles together and DFT
-    public BufferedImage modulateData(int[] data){
+    public BufferedImage modulateData(){
         int columns   = width;
         int rows  = height;
         ComplexMatrix tile = new ComplexMatrix(rows,columns);
         tile.clearData();
-        int nRows = (int)(Math.sqrt((4*data.length)+1)-1)/4;
+        int nRows = (int)(Math.sqrt((4*inputData.length)+1)-1)/4;
         //nRows = 4;
-        tile = HermitianModulator.hermitianModulator(data, rows, columns, nRows);
+        tile = HermitianModulator.hermitianModulator(inputData, rows, columns, nRows);
         FloatFFT_2D fft;        
         fft = new FloatFFT_2D(rows,columns);
         fft.complexInverse(tile.complexData, false);
