@@ -24,7 +24,7 @@
 package com.cate.javatransmitter;
 
 /**
-    // Puts adjacent data bits which are differntially modulated on 
+    // Puts adjacent data bits which are differentially modulated on 
     // adjacent elements of a complex matrix;
  * @author Amin
  */

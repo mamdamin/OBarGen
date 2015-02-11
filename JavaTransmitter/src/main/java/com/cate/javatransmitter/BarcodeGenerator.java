@@ -48,7 +48,10 @@ public class BarcodeGenerator {
     private byte[] inputData=null;
     private int width = 128;
     private int height = 128;
-    
+    private FinderPattern finPat;   // Finder Pattern
+    public BarcodeGenerator(){
+        finPat = new FinderPattern(2);
+    }
     
     public void setData(byte[] data){
         inputData = data;
@@ -73,34 +76,22 @@ public class BarcodeGenerator {
         fft.complexInverse(tile.complexData, false);
 //        BufferedImage image = tile.getBufferedImage();
         WritableRaster dataRaster = tile.getRaster();
-        BufferedImage image = createFrame(0,2,dataRaster);
+        BufferedImage image = createFrame(0,dataRaster);
         return image;
         //TODO Clipp Image
     }
     
-    private BufferedImage createFrame(int cyclicPrefix, int finderScale, WritableRaster dataRaster){
-        int finderSize = finderScale*9;
+    private BufferedImage createFrame(int cyclicPrefix, WritableRaster dataRaster){
+        int finderSize = finPat.size;
         int frameWidth  = width +2*cyclicPrefix+2*finderSize;
         int frameHeight = height+2*cyclicPrefix+2*finderSize;
         BufferedImage frame = new BufferedImage(frameWidth, frameHeight, BufferedImage.TYPE_BYTE_GRAY);
         WritableRaster raster = frame.getRaster();
-        
-        BufferedImage finderImage = new BufferedImage(finderSize, finderSize, BufferedImage.TYPE_BYTE_GRAY);
-        Graphics2D finderGraphic = finderImage.createGraphics();
-        finderGraphic.setBackground(Color.black);
-        finderGraphic.setPaint(Color.white);
-        finderGraphic.fillRect(0, 0, finderSize, finderSize);
-        finderGraphic.setPaint(Color.black);
-        finderGraphic.fillRect(finderScale, finderScale, finderSize-2*finderScale, finderSize-2*finderScale);
-        finderGraphic.setPaint(Color.white);
-        finderGraphic.fillRect(2*finderScale, 2*finderScale, finderSize-4*finderScale, finderSize-4*finderScale);
-        finderGraphic.setPaint(Color.black);
-        finderGraphic.fillRect(3*finderScale, 3*finderScale, finderSize-6*finderScale, finderSize-6*finderScale);
-        WritableRaster finderRaster = finderImage.getRaster();
+
         //Place Finder Patterns on the image
-        raster.setRect(0, 0, finderRaster);
-        raster.setRect(width +2*cyclicPrefix+finderSize, 0, finderRaster);
-        raster.setRect(0, width +2*cyclicPrefix+finderSize, finderRaster);
+        raster.setRect(0, 0, finPat.Raster);
+        raster.setRect(width +2*cyclicPrefix+finderSize, 0, finPat.Raster);
+        raster.setRect(0, width +2*cyclicPrefix+finderSize, finPat.Raster);
         
         //Place OFDM data
         raster.setRect(cyclicPrefix+finderSize, cyclicPrefix+finderSize, dataRaster);
@@ -131,31 +122,31 @@ public class BarcodeGenerator {
     return frame;
     }
 
-    public void generateImage(){
-        InputStream in = new ByteArrayInputStream(inputData);
-        try {
-            BufferedImage bImageFromConvert = ImageIO.read(in);
-            ImageIO.write(bImageFromConvert, "bmp", new File("d:\\new-darksouls.bmp")); 
-        } catch (IOException ex) {
-            Logger.getLogger(BarcodeGenerator.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+//    public void generateImage(){
+//        InputStream in = new ByteArrayInputStream(inputData);
+//        try {
+//            BufferedImage bImageFromConvert = ImageIO.read(in);
+//            ImageIO.write(bImageFromConvert, "bmp", new File("d:\\new-darksouls.bmp")); 
+//        } catch (IOException ex) {
+//            Logger.getLogger(BarcodeGenerator.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
     
-    public byte[] bytesFromImage(){
-        try {
-            byte[] imageInByte;
-            BufferedImage originalImage = ImageIO.read(new File("d:\\Mono.bmp"));
-            
-            // convert BufferedImage to byte array
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(originalImage, "png", baos);
-            baos.flush();
-            imageInByte = baos.toByteArray();
-            baos.close();
-            return(imageInByte);
-        } catch (IOException ex) {
-            Logger.getLogger(BarcodeGenerator.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
+//    public byte[] bytesFromImage(){
+//        try {
+//            byte[] imageInByte;
+//            BufferedImage originalImage = ImageIO.read(new File("d:\\Mono.bmp"));
+//            
+//            // convert BufferedImage to byte array
+//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//            ImageIO.write(originalImage, "png", baos);
+//            baos.flush();
+//            imageInByte = baos.toByteArray();
+//            baos.close();
+//            return(imageInByte);
+//        } catch (IOException ex) {
+//            Logger.getLogger(BarcodeGenerator.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return null;
+//    }
 }
