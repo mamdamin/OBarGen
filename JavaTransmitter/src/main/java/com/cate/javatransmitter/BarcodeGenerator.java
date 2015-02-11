@@ -46,21 +46,23 @@ import java.awt.image.SampleModel;
  */
 public class BarcodeGenerator {
     private int[] inputData=null;
-    private final int width = 128;
-    private final int height = 128;
-    private final FinderPattern finPat;   // Finder Pattern
+    private int width = 128;
+    private int height = 128;
+    private FinderPattern finPat;   // Finder Pattern
     //private final BufferedImage barcodeImage = null;
     
     public BarcodeGenerator(){
-        finPat = new FinderPattern(2);
+
     }
     
     public void setData(int[] data){
         inputData = data;
     }
 
-    public void setParams(){
-        
+    public void setParams(int height,int width,int findeScale){
+        this.width = width;
+        this.height= height;
+        finPat = new FinderPattern(findeScale);
     }
     
     //Take care of putting tiles together and DFT
