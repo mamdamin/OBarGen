@@ -61,8 +61,8 @@ public class BarcodeGenerator {
 
     //Take care of putting tiles together and DFT
     public BufferedImage modulateData(int[] data){
-        int columns   = 256;
-        int rows  = 256;
+        int columns   = width;
+        int rows  = height;
         ComplexMatrix tile = new ComplexMatrix(rows,columns);
         tile.clearData();
         int nRows = (int)(Math.sqrt((4*data.length)+1)-1)/4;
@@ -72,12 +72,13 @@ public class BarcodeGenerator {
         fft = new FloatFFT_2D(rows,columns);
         fft.complexInverse(tile.complexData, false);
 //        BufferedImage image = tile.getBufferedImage();
-        BufferedImage image = createFrame(0,5);
+        WritableRaster dataRaster = tile.getRaster();
+        BufferedImage image = createFrame(0,2,dataRaster);
         return image;
         //TODO Clipp Image
     }
     
-    private BufferedImage createFrame(int cyclicPrefix, int finderScale){
+    private BufferedImage createFrame(int cyclicPrefix, int finderScale, WritableRaster dataRaster){
         int finderSize = finderScale*9;
         int frameWidth  = width +2*cyclicPrefix+2*finderSize;
         int frameHeight = height+2*cyclicPrefix+2*finderSize;
@@ -96,15 +97,36 @@ public class BarcodeGenerator {
         finderGraphic.setPaint(Color.black);
         finderGraphic.fillRect(3*finderScale, 3*finderScale, finderSize-6*finderScale, finderSize-6*finderScale);
         WritableRaster finderRaster = finderImage.getRaster();
-        
+        //Place Finder Patterns on the image
         raster.setRect(0, 0, finderRaster);
-        raster.setRect(width +cyclicPrefix+finderSize, 0, finderRaster);
-        raster.setRect(0, width +cyclicPrefix+finderSize, finderRaster);
-
+        raster.setRect(width +2*cyclicPrefix+finderSize, 0, finderRaster);
+        raster.setRect(0, width +2*cyclicPrefix+finderSize, finderRaster);
         
-        //int finderSize = 9;
-//        int[][] finderPattern = new int[finderSize][finderSize];
-//        int[][] imageFrame = new int[rows][columns];
+        //Place OFDM data
+        raster.setRect(cyclicPrefix+finderSize, cyclicPrefix+finderSize, dataRaster);
+        
+        //Add CyclicPrefix
+        if (cyclicPrefix>0){
+            //Upper CycleicPrefix
+            raster.setRect(cyclicPrefix+finderSize,finderSize,dataRaster.createChild(0, height - cyclicPrefix, width, cyclicPrefix, 0, 0, null));
+            //Lower CycleicPrefix
+            raster.setRect(cyclicPrefix+finderSize,finderSize+cyclicPrefix+height,dataRaster.createChild(0, 0, width, cyclicPrefix, 0, 0, null));
+            //Left CycleicPrefix
+            raster.setRect(finderSize,finderSize+cyclicPrefix,dataRaster.createChild(width-cyclicPrefix, 0, cyclicPrefix, height, 0, 0, null));        
+            //Right CycleicPrefix
+
+            //Corner Squares
+            raster.setRect(finderSize+cyclicPrefix+width,finderSize+cyclicPrefix,dataRaster.createChild(0, 0, cyclicPrefix, height, 0, 0, null));                
+            //UpperLeftCorner CycleicPrefix
+            raster.setRect(finderSize,finderSize,dataRaster.createChild(width-cyclicPrefix, height-cyclicPrefix, cyclicPrefix, cyclicPrefix, 0, 0, null));        
+            //LowerLeftCorner CycleicPrefix
+            raster.setRect(finderSize,finderSize+cyclicPrefix+height,dataRaster.createChild(width-cyclicPrefix, 0, cyclicPrefix, cyclicPrefix, 0, 0, null));        
+            //UpperRightCorner CycleicPrefix
+            raster.setRect(finderSize+cyclicPrefix+width,finderSize,dataRaster.createChild(0,height-cyclicPrefix, cyclicPrefix, cyclicPrefix, 0, 0, null));        
+            //LowerRightCorner CycleicPrefix
+            raster.setRect(finderSize+cyclicPrefix+width,finderSize+cyclicPrefix+height,dataRaster.createChild(0,0, cyclicPrefix, cyclicPrefix, 0, 0, null));                
+        }        
+        
         
     return frame;
     }
