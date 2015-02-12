@@ -34,10 +34,10 @@ public class SwingContainer {
    }*/
 
    private void prepareGUI(){
-      mainFrame = new JFrame("Java Swing Examples");
-      mainFrame.setSize(600,600);
+      mainFrame = new JFrame("Java OFDM Barcode Transmitter");
+      mainFrame.setSize(600,400);
       mainFrame.setLocation(2000, 100);
-      mainFrame.setLayout(new GridLayout(3, 1));
+      mainFrame.setLayout(new BoxLayout(mainFrame.getContentPane(), BoxLayout.PAGE_AXIS));
       mainFrame.addWindowListener(new WindowAdapter() {
          public void windowClosing(WindowEvent windowEvent){
             System.exit(0);
@@ -60,7 +60,8 @@ public class SwingContainer {
 
 
    public void showJPanelDemo(){
-      headerLabel.setText("Container in action: JPanel");      
+      headerLabel.setText("Container in action: JPanel");
+      headerLabel.setAlignmentX(0);
       msglabel = new JLabel("Welcome to TutorialsPoint SWING Tutorial."
          , JLabel.CENTER);
       JPanel panel = new JPanel();
