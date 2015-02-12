@@ -35,7 +35,7 @@ public class SwingContainer {
 
    private void prepareGUI(){
       mainFrame = new JFrame("Java OFDM Barcode Transmitter");
-      mainFrame.setSize(600,400);
+      mainFrame.setSize(600,650);
       mainFrame.setLocation(2000, 100);
       mainFrame.setLayout(new BoxLayout(mainFrame.getContentPane(), BoxLayout.PAGE_AXIS));
       mainFrame.addWindowListener(new WindowAdapter() {
@@ -43,7 +43,9 @@ public class SwingContainer {
             System.exit(0);
          }        
       });    
-      headerLabel = new JLabel("", JLabel.CENTER);        
+      //headerLabel = new JLabel("", JLabel.CENTER);  
+      headerLabel = new JLabel("Container in action: JPanel");
+      headerLabel.setHorizontalTextPosition(JLabel.CENTER);
       statusLabel = new JLabel("",JLabel.CENTER);
 
       statusLabel.setSize(350,100);
@@ -51,7 +53,7 @@ public class SwingContainer {
       controlPanel = new JPanel();
       controlPanel.setLayout(new FlowLayout());
 
-      mainFrame.add(headerLabel);
+      controlPanel.add(headerLabel);
       mainFrame.add(controlPanel);
       mainFrame.add(statusLabel);
       mainFrame.setVisible(true);
@@ -59,17 +61,17 @@ public class SwingContainer {
    }
 
 
-   public void showJPanelDemo(){
-      headerLabel.setText("Container in action: JPanel");
-      headerLabel.setAlignmentX(0);
-      msglabel = new JLabel("Welcome to TutorialsPoint SWING Tutorial."
-         , JLabel.CENTER);
-      JPanel panel = new JPanel();
-      panel.setBackground(Color.magenta);
-      panel.setLayout(new FlowLayout());        
-      //panel.add(msglabel);
-      //controlPanel.add(panel);
-   }   
+//   public void showJPanelDemo(){
+//      headerLabel.setText("Container in action: JPanel");
+//
+//      msglabel = new JLabel("Welcome to TutorialsPoint SWING Tutorial."
+//         , JLabel.CENTER);
+//      JPanel panel = new JPanel();
+//      panel.setBackground(Color.magenta);
+//      panel.setLayout(new FlowLayout());        
+//      //panel.add(msglabel);
+//      //controlPanel.add(panel);
+//   }   
 
 
 public void showBarcode(BufferedImage barcode){

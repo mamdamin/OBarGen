@@ -70,7 +70,7 @@ public class Test {
         //show video
         
         SwingContainer  swingContainer = new SwingContainer();  
-        swingContainer.showJPanelDemo();
+        //swingContainer.showJPanelDemo();
         
         
         // Generate Barcode
@@ -80,7 +80,7 @@ public class Test {
 //        bGen.generateImage();
         int[] toEncode1 = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
 
-        bGen.setParams(256, 256, 2);
+        bGen.setParams(512, 512, 2);
         bGen.setData(toEncode1);
         swingContainer.showBarcode(bGen.modulateData());
         //
