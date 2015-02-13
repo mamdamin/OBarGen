@@ -58,7 +58,7 @@ public class ComplexMatrix {
             this.complexData[i][2*j] = real;
             this.complexData[i][2*j+1] = -imag;
             
-            System.out.println(Integer.toString(i)+","+Integer.toString(j)+"="+Integer.toString(-imag));
+            //System.out.println(Integer.toString(i)+","+Integer.toString(j)+"="+Integer.toString(-imag));
         } catch (Exception e) {
         }
     }

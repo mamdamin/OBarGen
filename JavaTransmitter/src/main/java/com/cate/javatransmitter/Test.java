@@ -20,6 +20,8 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.google.zxing.common.reedsolomon.ReedSolomonEncoder;
 import com.google.zxing.common.reedsolomon.ReedSolomonDecoder;
 import com.google.zxing.common.reedsolomon.ReedSolomonException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jtransforms.fft.FloatFFT_2D;
 
@@ -81,9 +83,28 @@ public class Test {
         int[] toEncode1 = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
 
         bGen.setParams(512, 512, 2);
-        bGen.setData(toEncode1);
-        swingContainer.showBarcode(bGen.modulateData());
-        //
+ 
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        int[] newToEncode1 = toEncode1.clone();
+        for(int i = 0; i<100; i++){
+            for(int x=0; x<=toEncode1.length-1;x++)
+                 newToEncode1[(x+i) % toEncode1.length ] = toEncode1[x];
+            toEncode1 = newToEncode1.clone();
+            bGen.setData(toEncode1);
+            swingContainer.showBarcode(bGen.modulateData());
+            System.out.println("Frame number: "+i);
+            
+        }
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //System.exit(0);        //
         //System.out.println("FFT Data = " + Arrays.toString(floats));
         /*
         try {

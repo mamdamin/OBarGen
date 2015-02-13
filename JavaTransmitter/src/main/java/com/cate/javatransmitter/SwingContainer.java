@@ -21,6 +21,8 @@ public class SwingContainer {
    private JLabel statusLabel;
    private JPanel controlPanel;
    private JLabel msglabel;
+   private JLabel picLabel;
+
    //private ActionListener action = 
    
 
@@ -35,6 +37,7 @@ public class SwingContainer {
 
    private void prepareGUI(){
       mainFrame = new JFrame("Java OFDM Barcode Transmitter");
+      picLabel = new JLabel();
       mainFrame.setSize(600,650);
       mainFrame.setLocation(2000, 100);
       mainFrame.setLayout(new BoxLayout(mainFrame.getContentPane(), BoxLayout.PAGE_AXIS));
@@ -56,8 +59,10 @@ public class SwingContainer {
       controlPanel.add(headerLabel);
       mainFrame.add(controlPanel);
       mainFrame.add(statusLabel);
-      mainFrame.setVisible(true);
-   
+      
+
+      controlPanel.add(picLabel);
+      mainFrame.setVisible(true);   
    }
 
 
@@ -96,24 +101,22 @@ public void showBarcode(BufferedImage barcode){
    
       int w = img.getWidth(null);
       int h = img.getHeight(null);
-     
-      BufferedImage myPicture1=null;
-       try {
-           myPicture1 = ImageIO.read(new File("c:\\logo11w.png"));
-       } catch (IOException ex) {
-           Logger.getLogger(SwingContainer.class.getName()).log(Level.SEVERE, null, ex);
-       }
-      BufferedImage myPicture2=null;
-       try {
-           myPicture2 = ImageIO.read(new File("c:\\erassm.gif"));
-       } catch (IOException ex) {
-           Logger.getLogger(SwingContainer.class.getName()).log(Level.SEVERE, null, ex);
-       }
-      JLabel picLabel = new JLabel(new ImageIcon(myPicture1),JLabel.CENTER);
+      picLabel.setIcon(new ImageIcon(barcode));
+//      BufferedImage myPicture1=null;
+//       try {
+//           myPicture1 = ImageIO.read(new File("c:\\logo11w.png"));
+//       } catch (IOException ex) {
+//           Logger.getLogger(SwingContainer.class.getName()).log(Level.SEVERE, null, ex);
+//       }
+//      BufferedImage myPicture2=null;
+//       try {
+//           myPicture2 = ImageIO.read(new File("c:\\erassm.gif"));
+//       } catch (IOException ex) {
+//           Logger.getLogger(SwingContainer.class.getName()).log(Level.SEVERE, null, ex);
+//       }
 
-      controlPanel.add(picLabel);
 
-      mainFrame.setVisible(true);
+
       Timer timer;
 //      for (int i=0;i<100;i++){
 //        picLabel.setIcon(new ImageIcon(barcode));
@@ -129,6 +132,6 @@ public void showBarcode(BufferedImage barcode){
 //              Logger.getLogger(SwingContainer.class.getName()).log(Level.SEVERE, null, ex);
 //          }        
 //        }
-    picLabel.setIcon(new ImageIcon(barcode));
+//    picLabel.setIcon(new ImageIcon(barcode));
     }
 }

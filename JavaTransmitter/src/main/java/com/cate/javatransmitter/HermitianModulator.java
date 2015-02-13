@@ -62,7 +62,7 @@ public class HermitianModulator {
 
         // Implement various lines on 2nd tile
         //Test
-        System.out.println("NEXT");
+        //System.out.println("NEXT");
         tile.setElement(1,width-1,0,1);
         for(int r=2;r<=nRows;r+=2){
             for(int j=1;j<r;j++){
