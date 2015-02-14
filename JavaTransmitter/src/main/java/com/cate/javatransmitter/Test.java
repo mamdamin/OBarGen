@@ -20,6 +20,7 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.google.zxing.common.reedsolomon.ReedSolomonEncoder;
 import com.google.zxing.common.reedsolomon.ReedSolomonDecoder;
 import com.google.zxing.common.reedsolomon.ReedSolomonException;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +31,7 @@ import org.jtransforms.fft.FloatFFT_2D;
 */
  
 public class Test {
-    private static GenericGF genericGF = new GenericGF(0x011D, 256, 0);
+    private static GenericGF genericGF = new GenericGF(0x011D, 256, 1);
  
         // Tutorial: http://zxing.org/w/docs/javadoc/index.html
  
@@ -42,8 +43,14 @@ public class Test {
         int size = 125;
         String fileType = "png";
         File myFile = new File(filePath);
-        int[] toEncode={255,0,0,0,0,0,0,0,0,0,0,0};
-        int ecBytes=5;
+        int ecBytes=64;
+        //generate random packet
+        int nOfBytes = 256;
+        int[] toEncode=new int[nOfBytes];
+        Random rand = new Random();
+        for(int i=0;i<nOfBytes-ecBytes;i++)
+            toEncode[i] = rand.nextInt(255);
+        
         //  RS encoder
         ReedSolomonEncoder rsEncoder;
         ReedSolomonDecoder rsDecoder;
@@ -51,10 +58,14 @@ public class Test {
         rsDecoder = new ReedSolomonDecoder(genericGF);
         System.out.println("Original data = " + Arrays.toString(toEncode));
         rsEncoder.encode(toEncode, ecBytes);
-        toEncode[1]=toEncode[2]=4;
+        toEncode[1]=toEncode[2]=toEncode[3]=toEncode[4]=toEncode[5]=toEncode[6]=toEncode[7]=toEncode[8]=4;
         System.out.println("Encoded  data = " + Arrays.toString(toEncode));
         rsDecoder.decode(toEncode,ecBytes);
         System.out.println("Decoded  data = " + Arrays.toString(toEncode));
+        int[] byteStream = {130,0};
+        int[] bitStream = DPSKModulator.DPSKModulator(byteStream);
+        System.out.println("BitStream = " + Arrays.toString(bitStream));
+        System.exit(0);
         //2D FFT
         FloatFFT_2D fft;
         fft = new FloatFFT_2D(2,2);
