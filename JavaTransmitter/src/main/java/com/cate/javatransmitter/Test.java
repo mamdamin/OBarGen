@@ -119,7 +119,7 @@ public class Test {
         } catch (InterruptedException ex) {
             Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //System.exit(0);        //
+        System.exit(0);        //
         //System.out.println("FFT Data = " + Arrays.toString(floats));
         /*
         try {

@@ -99,8 +99,8 @@ public void showBarcode(BufferedImage barcode){
           
       }
    
-      int w = img.getWidth(null);
-      int h = img.getHeight(null);
+//      int w = img.getWidth(null);
+//      int h = img.getHeight(null);
       picLabel.setIcon(new ImageIcon(barcode));
 //      BufferedImage myPicture1=null;
 //       try {

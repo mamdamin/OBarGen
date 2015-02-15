@@ -60,11 +60,11 @@ public class BarcodeGenerator {
         int rows  = height;
         ComplexMatrix tile = new ComplexMatrix(rows,columns);
         tile.clearData();
-        int nRows = (int)(Math.sqrt((4*inputData.length)+1)-1)/4;
+        int nRows = (int)(Math.sqrt((4*inputData.length*8)+1)-1)/4+2;
         //nRows = 4;
         dPSKStream.setData(inputData);
         
-        tile = HermitianModulator.hermitianModulator(inputData, rows, columns, nRows);
+        tile = HermitianModulator.hermitianModulator(dPSKStream, rows, columns, nRows);
         FloatFFT_2D fft;        
         fft = new FloatFFT_2D(rows,columns);
         fft.complexInverse(tile.complexData, false);

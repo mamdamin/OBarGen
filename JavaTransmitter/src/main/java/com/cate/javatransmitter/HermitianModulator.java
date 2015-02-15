@@ -30,7 +30,7 @@ package com.cate.javatransmitter;
  */
 public class HermitianModulator {
 
-    public static ComplexMatrix hermitianModulator(int[] data,int height,int width, int nRows){
+    public static ComplexMatrix hermitianModulator(DPSKStream dS,int height,int width, int nRows){
         ComplexMatrix tile = new ComplexMatrix(height,width);
         tile.setElement(1,1,0,1);
         int dataIndex = 0;
@@ -38,52 +38,34 @@ public class HermitianModulator {
 
         // Implement various lines on 1st tile
         for(int r=2;r<=nRows;r+=2){
-            for(int j=1;j<r;j++){
-                tile.setElement(r,j,0,data[dataIndex]);
-                dataIndex++;
-            }
+            for(int j=1;j<r;j++)
+                tile.setElement(r,j,0,dS.next());
         
-            for(int i=r-1;i>0;i--){
-                tile.setElement(i,r,0,data[dataIndex]);
-                dataIndex++;
-            }            
+            for(int i=r-1;i>0;i--)
+                tile.setElement(i,r,0,dS.next());
             
-            for(int i=1;i<r+1;i++){
-                tile.setElement(i,r+1,0,data[dataIndex]);
-                dataIndex++;
-            } 
-
-            for(int j=r;j>0;j--){
-                tile.setElement(r+1,j,0,data[dataIndex]);
-                dataIndex++;
-            }            
-            
+            for(int i=1;i<r+1;i++)
+                tile.setElement(i,r+1,0,dS.next());
+                
+            for(int j=r;j>0;j--)
+                tile.setElement(r+1,j,0,dS.next());
         }
-
         //Implement various lines on 2nd tile
         //Test
         //System.out.println("NEXT");
         tile.setElement(1,width-1,0,1);
         for(int r=2;r<=nRows;r+=2){
-            for(int j=1;j<r;j++){
-                tile.setElement(r,width-j,0,data[dataIndex]);
-                dataIndex++;
-            }
+            for(int j=1;j<r;j++)
+                tile.setElement(r,width-j,0,dS.next());
         
-            for(int i=r-1;i>0;i--){
-                tile.setElement(i,width-r,0,data[dataIndex]);
-                dataIndex++;
-            }            
+            for(int i=r-1;i>0;i--)
+                tile.setElement(i,width-r,0,dS.next());
             
-            for(int i=1;i<r+1;i++){
-                tile.setElement(i,width-r-1,0,data[dataIndex]);
-                dataIndex++;
-            } 
+            for(int i=1;i<r+1;i++)
+                tile.setElement(i,width-r-1,0,dS.next());
 
-            for(int j=r;j>0;j--){
-                tile.setElement(r+1,width-j,0,data[dataIndex]);
-                dataIndex++;
-            }            
+            for(int j=r;j>0;j--)
+                tile.setElement(r+1,width-j,0,dS.next());
             
         }        
         return tile;

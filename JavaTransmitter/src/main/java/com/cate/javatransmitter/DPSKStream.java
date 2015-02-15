@@ -47,10 +47,11 @@ public class DPSKStream {
     }
             
     public int next(){
-        return((bitCounter>=inputData.length*8)?0:2*((inputData[bitCounter/8]>>bitCounter++%8)&0x01)-1);
+        return((bitCounter>=inputData.length*8)?0:100*((inputData[bitCounter/8]>>bitCounter++%8)&0x01)-50);
     }
     
     public void setData(int[] inputData) {
+        this.reset();
         this.inputData = (inputData.length<=Integer.MAX_VALUE/8)?inputData:Arrays.copyOf(inputData, Integer.MAX_VALUE/8);
         this.length = inputData.length*8;
     }
