@@ -23,27 +23,37 @@
  */
 package com.cate.javatransmitter;
 
+import java.util.Arrays;
+
 /**
- * gets an input byte array and returns differential modulated bit array
- * @author Amin
+ * Create a stream of DPSK symbols from Byte array of data
+ * @author Amin Motahari
  */
-public class DPSKModulator {
-    public static int[] DPSKModulator(int[] inputData){
-    int[] outputData = new int[inputData.length*8];
-    int currentByte;
-    int currentBit;
-    int oldBit = 0x01;
-        for(int i=0; i<inputData.length;i++){
-            currentByte = (byte) inputData[i];
-            for(int j=0;j<8;j++){
-                currentBit = (currentByte ^ oldBit) & 0x01;
-                oldBit = currentBit;
-                currentByte = (byte) (currentByte>>1);
-                outputData[i*8+j]=oldBit;
-            }
-        }
-        
-    return outputData;
-        
+public class DPSKStream {
+    int[] inputData;
+    int[] outStream;
+    int byteCounter;
+    int bitCounter;
+    private int length;
+    public DPSKStream(){
+        this.reset();
     }
+    
+    public final void reset(){
+        length = 0;        
+        this.byteCounter = 0;
+        this.bitCounter = 0;
+        inputData=null;
+    }
+            
+    public int next(){
+        return((bitCounter>=inputData.length*8)?0:2*((inputData[bitCounter/8]>>bitCounter++%8)&0x01)-1);
+    }
+    
+    public void setData(int[] inputData) {
+        this.inputData = (inputData.length<=Integer.MAX_VALUE/8)?inputData:Arrays.copyOf(inputData, Integer.MAX_VALUE/8);
+        this.length = inputData.length*8;
+    }
+    
 }
+

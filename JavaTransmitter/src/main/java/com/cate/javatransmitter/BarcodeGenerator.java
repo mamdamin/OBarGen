@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2015 Amin.
+ * Copyright 2015 Amin Motahari.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,21 +24,9 @@
 
 package com.cate.javatransmitter;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import java.awt.image.*;
-import java.lang.Math;
 import org.jtransforms.fft.FloatFFT_2D;
-import java.awt.image.SampleModel;
 
 /**
  *
@@ -50,9 +38,10 @@ public class BarcodeGenerator {
     private int height = 128;
     private FinderPattern finPat;   // Finder Pattern
     //private final BufferedImage barcodeImage = null;
+    private DPSKStream dPSKStream;
     
     public BarcodeGenerator(){
-
+        dPSKStream = new DPSKStream();
     }
     
     public void setData(int[] data){
@@ -73,6 +62,8 @@ public class BarcodeGenerator {
         tile.clearData();
         int nRows = (int)(Math.sqrt((4*inputData.length)+1)-1)/4;
         //nRows = 4;
+        dPSKStream.setData(inputData);
+        
         tile = HermitianModulator.hermitianModulator(inputData, rows, columns, nRows);
         FloatFFT_2D fft;        
         fft = new FloatFFT_2D(rows,columns);

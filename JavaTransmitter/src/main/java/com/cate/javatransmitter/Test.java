@@ -62,10 +62,14 @@ public class Test {
         System.out.println("Encoded  data = " + Arrays.toString(toEncode));
         rsDecoder.decode(toEncode,ecBytes);
         System.out.println("Decoded  data = " + Arrays.toString(toEncode));
-        int[] byteStream = {130,0};
-        int[] bitStream = DPSKModulator.DPSKModulator(byteStream);
-        System.out.println("BitStream = " + Arrays.toString(bitStream));
-        System.exit(0);
+        int[] byteStream = {0b00101101,129};
+        //int[] bitStream = DPSKModulator.DPSKModulator(byteStream);
+        DPSKStream bitStream = new DPSKStream();
+        bitStream.setData(byteStream);
+        for(int i=0; i<byteStream.length*8+10;i++)            
+            System.out.println(Integer.toString(i)+" th bit is " + Integer.toString(bitStream.next()));
+        //System.exit(0);
+        
         //2D FFT
         FloatFFT_2D fft;
         fft = new FloatFFT_2D(2,2);
