@@ -29,25 +29,37 @@ import java.util.Arrays;
  * Create a stream of DPSK symbols from Byte array of data
  * @author Amin Motahari
  */
-public class DPSKStream {
+public class DPSKStreamer {
     int[] inputData;
     int[] outStream;
     int byteCounter;
     int bitCounter;
     private int length;
-    public DPSKStream(){
+    private int oldBit;
+    public DPSKStreamer(){
         this.reset();
     }
     
     public final void reset(){
-        length = 0;        
+        this.length = 0;        
         this.byteCounter = 0;
         this.bitCounter = 0;
+        this.oldBit=1;
         inputData=null;
     }
-            
+        
+    // Calculate the Difference of the Current and next bit
     public int next(){
-        return((bitCounter>=inputData.length*8)?0:100*((inputData[bitCounter/8]>>bitCounter++%8)&0x01)-50);
+        
+        byteCounter = bitCounter/8;
+        if(byteCounter<inputData.length){
+            oldBit = (oldBit^((inputData[byteCounter]>>bitCounter++%8)&0x01))&0x01;
+            //System.out.println("Current Byte = "+Integer.toBinaryString(inputData[byteCounter]) +" and Current Bit = "+ Integer.toString(oldBit));
+            return(200*oldBit-100);
+        }
+            else
+            return(0);
+        //return((bitCounter>=inputData.length*8)?0:100*((inputData[bitCounter/8]>>bitCounter++%8)&0x01)-50);
     }
     
     public void setData(int[] inputData) {

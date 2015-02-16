@@ -38,20 +38,20 @@ public class BarcodeGenerator {
     private int height = 128;
     private FinderPattern finPat;   // Finder Pattern
     //private final BufferedImage barcodeImage = null;
-    private DPSKStream dPSKStream;
+    private DPSKStreamer dPSKStream;
     
     public BarcodeGenerator(){
-        dPSKStream = new DPSKStream();
+        dPSKStream = new DPSKStreamer();
     }
     
     public void setData(int[] data){
         inputData = data;
     }
 
-    public void setParams(int height,int width,int findeScale){
+    public void setParams(int height,int width,int finderScale){
         this.width = width;
         this.height= height;
-        finPat = new FinderPattern(findeScale);
+        finPat = new FinderPattern(finderScale);
     }
     
     //Take care of putting tiles together and DFT

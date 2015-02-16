@@ -30,7 +30,7 @@ package com.cate.javatransmitter;
  */
 public class HermitianModulator {
 
-    public static ComplexMatrix hermitianModulator(DPSKStream dS,int height,int width, int nRows){
+    public static ComplexMatrix hermitianModulator(DPSKStreamer dS,int height,int width, int nRows){
         ComplexMatrix tile = new ComplexMatrix(height,width);
         tile.setElement(1,1,0,1);
         int dataIndex = 0;

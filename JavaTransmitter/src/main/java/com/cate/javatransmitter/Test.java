@@ -64,25 +64,25 @@ public class Test {
         System.out.println("Decoded  data = " + Arrays.toString(toEncode));
         int[] byteStream = {0b00101101,129};
         //int[] bitStream = DPSKModulator.DPSKModulator(byteStream);
-        DPSKStream bitStream = new DPSKStream();
-        bitStream.setData(byteStream);
-        for(int i=0; i<byteStream.length*8+10;i++)            
-            System.out.println(Integer.toString(i)+" th bit is " + Integer.toString(bitStream.next()));
+//        DPSKStream bitStream = new DPSKStream();
+//        bitStream.setData(byteStream);
+//        for(int i=0; i<byteStream.length*8+10;i++)            
+//            System.out.println(Integer.toString(i)+" th bit is " + Integer.toString(bitStream.next()));
         //System.exit(0);
         
         //2D FFT
-        FloatFFT_2D fft;
-        fft = new FloatFFT_2D(2,2);
-        float[][] floats = {{1,1,1,1},{1,1,1,1}};
-        fft.complexForward(floats);
-        //System.out.println("\n Floats " + floats[0][0]);
-        for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 4; j++) {
-                    System.out.print(floats[i][j]+" ");
-                }
-                System.out.println("");
-            }
-        System.out.println(floats.length);
+//        FloatFFT_2D fft;
+//        fft = new FloatFFT_2D(2,2);
+//        float[][] floats = {{1,1,1,1},{1,1,1,1}};
+//        fft.complexForward(floats);
+//        //System.out.println("\n Floats " + floats[0][0]);
+//        for (int i = 0; i < 2; i++) {
+//                for (int j = 0; j < 4; j++) {
+//                    System.out.print(floats[i][j]+" ");
+//                }
+//                System.out.println("");
+//            }
+//        System.out.println(floats.length);
         
         //show video
         
