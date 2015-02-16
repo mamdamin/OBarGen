@@ -56,20 +56,21 @@ public class BarcodeGenerator {
     
     //Take care of putting tiles together and DFT
     public BufferedImage modulateData(){
-        int columns   = width;
-        int rows  = height;
-        ComplexMatrix tile = new ComplexMatrix(rows,columns);
-        tile.clearData();
-        int nRows = (int)(Math.sqrt((4*inputData.length*8)+1)-1)/4+2;
-        //nRows = 4;
+        //int columns   = width;
+        //int rows  = height;
+        ComplexMatrix ofdmFrame = new ComplexMatrix(height,width);
+        ofdmFrame.clearData();
+        int nRows = (int)Math.ceil((Math.sqrt((16*inputData.length)+1)-1)/2);
+        if(nRows%2==1)nRows++;
+        //System.out.println(nRows);
         dPSKStream.setData(inputData);
         
-        tile = HermitianModulator.hermitianModulator(dPSKStream, rows, columns, nRows);
+        ofdmFrame = HermitianModulator.hermitianModulator(dPSKStream, height, width, nRows);
         FloatFFT_2D fft;        
-        fft = new FloatFFT_2D(rows,columns);
-        fft.complexInverse(tile.complexData, false);
-//        BufferedImage image = tile.getBufferedImage();
-        WritableRaster dataRaster = tile.getRaster();
+        fft = new FloatFFT_2D(height,width);
+        fft.complexInverse(ofdmFrame.complexData, false);
+//        BufferedImage image = ofdmFrame.getBufferedImage();
+        WritableRaster dataRaster = ofdmFrame.getRaster();
         BufferedImage image = createFrame(0,dataRaster);
         return image;
         //TODO Clipp Image

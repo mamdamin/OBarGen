@@ -36,12 +36,17 @@ public class DPSKStreamer {
     int bitCounter;
     private int length;
     private int oldBit;
+    private int gain;
+    private int side;
+
     public DPSKStreamer(){
         this.reset();
     }
     
     public final void reset(){
-        this.length = 0;        
+        this.length = 0;
+        this.side = 1;
+        this.gain = 100;
         this.byteCounter = 0;
         this.bitCounter = 0;
         this.oldBit=1;
@@ -52,14 +57,13 @@ public class DPSKStreamer {
     public int next(){
         
         byteCounter = bitCounter/8;
-        if(byteCounter<inputData.length){
+        if(byteCounter<((inputData.length/2)*side)){
             oldBit = (oldBit^((inputData[byteCounter]>>bitCounter++%8)&0x01))&0x01;
             //System.out.println("Current Byte = "+Integer.toBinaryString(inputData[byteCounter]) +" and Current Bit = "+ Integer.toString(oldBit));
-            return(200*oldBit-100);
+            return(2*gain*oldBit-gain);
         }
             else
             return(0);
-        //return((bitCounter>=inputData.length*8)?0:100*((inputData[bitCounter/8]>>bitCounter++%8)&0x01)-50);
     }
     
     public void setData(int[] inputData) {
@@ -68,5 +72,15 @@ public class DPSKStreamer {
         this.length = inputData.length*8;
     }
     
+    public void setGain(int gain){
+        this.gain = gain;
+    }
+    
+    // Generate new Stream for the second side of the matrix
+    public void nextSide(){
+        side = 2;
+        bitCounter = inputData.length*4;
+        oldBit = 1;
+    }
 }
-
+  

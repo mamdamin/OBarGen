@@ -20,6 +20,8 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.google.zxing.common.reedsolomon.ReedSolomonEncoder;
 import com.google.zxing.common.reedsolomon.ReedSolomonDecoder;
 import com.google.zxing.common.reedsolomon.ReedSolomonException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +38,7 @@ public class Test {
         // Tutorial: http://zxing.org/w/docs/javadoc/index.html
  
     @SuppressWarnings("empty-statement")
-    public static void main(String[] args) throws ReedSolomonException {
+    public static void main(String[] args) throws ReedSolomonException, UnsupportedEncodingException {
         
         String myCodeText = "http://Crunchify.com/";
         String filePath = "/Users/amin/Documents/CrunchifyQR.png";
@@ -45,30 +47,43 @@ public class Test {
         File myFile = new File(filePath);
         int ecBytes=64;
         //generate random packet
-        int nOfBytes = 256;
-        int[] toEncode=new int[nOfBytes];
+        int nOfBytes = 255;
+        int[] testEncode=new int[nOfBytes];
         Random rand = new Random();
         for(int i=0;i<nOfBytes-ecBytes;i++)
-            toEncode[i] = rand.nextInt(255);
+            testEncode[i] = rand.nextInt(256);
         
         //  RS encoder
         ReedSolomonEncoder rsEncoder;
         ReedSolomonDecoder rsDecoder;
         rsEncoder = new ReedSolomonEncoder(genericGF);
         rsDecoder = new ReedSolomonDecoder(genericGF);
-        System.out.println("Original data = " + Arrays.toString(toEncode));
-        rsEncoder.encode(toEncode, ecBytes);
-        toEncode[1]=toEncode[2]=toEncode[3]=toEncode[4]=toEncode[5]=toEncode[6]=toEncode[7]=toEncode[8]=4;
-        System.out.println("Encoded  data = " + Arrays.toString(toEncode));
-        rsDecoder.decode(toEncode,ecBytes);
-        System.out.println("Decoded  data = " + Arrays.toString(toEncode));
-        int[] byteStream = {0b00101101,129};
+        System.out.println("Original data = " + Arrays.toString(testEncode));
+        rsEncoder.encode(testEncode, ecBytes);
+        testEncode[1]=testEncode[2]=testEncode[3]=testEncode[4]=testEncode[5]=testEncode[6]=testEncode[7]=testEncode[8]=4;
+        System.out.println("Encoded  data = " + Arrays.toString(testEncode));
+        rsDecoder.decode(testEncode,ecBytes);
+        System.out.println("Decoded  data = " + Arrays.toString(testEncode));
+//        int[] byteStream = {0b00101101,129};
         //int[] bitStream = DPSKModulator.DPSKModulator(byteStream);
 //        DPSKStream bitStream = new DPSKStream();
 //        bitStream.setData(byteStream);
 //        for(int i=0; i<byteStream.length*8+10;i++)            
 //            System.out.println(Integer.toString(i)+" th bit is " + Integer.toString(bitStream.next()));
-        //System.exit(0);
+        
+        FileHandler fH = new FileHandler();
+        fH.setPacketSize(nOfBytes-ecBytes);
+        fH.setFile();
+        byte[] toEncode;
+        while(!fH.isFinished){
+            toEncode = fH.nextChunk();
+        System.out.println(Arrays.toString(toEncode));
+        //rsEncoder.encode(testEncode, ecBytes);
+            //System.out.println((toEncode, StandardCharsets.UTF_8));
+        }
+        
+            //System.out.println(new String(fH.nextChunk(), StandardCharsets.UTF_8));
+        System.exit(0);
         
         //2D FFT
 //        FloatFFT_2D fft;
@@ -95,8 +110,11 @@ public class Test {
 //        byte[] bFI = bGen.bytesFromImage();
 //        bGen.setData(bFI);
 //        bGen.generateImage();
-        int[] toEncode1 = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
-
+        //int[] toEncode1 = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+        int[] toEncode1 = new int[16192];   //Not greater than this for 512x512
+        for(int i = 0;i<toEncode1.length;i++)
+            toEncode1[i] = rand.nextInt(255);
+        
         bGen.setParams(512, 512, 2);
  
         try {
@@ -111,11 +129,16 @@ public class Test {
             toEncode1 = newToEncode1.clone();
             bGen.setData(toEncode1);
             swingContainer.showBarcode(bGen.modulateData());
-            System.out.println("Frame number: "+i);
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
+        }            
+            //System.out.println("Frame number: "+i);
             
         }
         try {
-            Thread.sleep(2000);
+            Thread.sleep(10000);
         } catch (InterruptedException ex) {
             Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
         }
