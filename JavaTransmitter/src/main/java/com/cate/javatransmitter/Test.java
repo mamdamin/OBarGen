@@ -74,13 +74,17 @@ public class Test {
         FileHandler fH = new FileHandler();
         fH.setPacketSize(nOfBytes-ecBytes);
         fH.setFile();
-        byte[] toEncode;
+        int[] toEncode;
         while(!fH.isFinished){
-            toEncode = fH.nextChunk();
+            
+            toEncode = fH.nextIntChunk();
+            rsEncoder.encode(toEncode, ecBytes);
+            //Arrays.fill(toEncode, 0x00);
         System.out.println(Arrays.toString(toEncode));
         //rsEncoder.encode(testEncode, ecBytes);
             //System.out.println((toEncode, StandardCharsets.UTF_8));
         }
+        //System.out.println(((byte) -63) & 0xFF);
         
             //System.out.println(new String(fH.nextChunk(), StandardCharsets.UTF_8));
         System.exit(0);

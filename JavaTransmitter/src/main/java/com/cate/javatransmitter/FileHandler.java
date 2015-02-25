@@ -49,6 +49,7 @@ public class FileHandler {
     private SeekableByteChannel sbc;
     private ByteBuffer buf;
     private int chunkCounter;
+    private int[] nIntC = new int[256];
     
     public FileHandler(){
         this.inputPath = Paths.get("C:/","erassm.gif");
@@ -57,7 +58,7 @@ public class FileHandler {
         this.chunkCounter = 0;
     }
     
-    public byte[] nextChunk(){
+    private byte[] nextChunk(){
 
         
             // Read the bytes with the proper encoding for this platform.  If
@@ -93,7 +94,8 @@ public class FileHandler {
         try {
             this.sbc = Files.newByteChannel(inputPath, StandardOpenOption.READ);
             this.nofChunks = (int) Math.ceil((double)(sbc.size())/packetSize);
-            System.out.println(nofChunks);
+            System.out.println("File Size = "+sbc.size()+" Bytes");
+            System.out.println("File Size = "+sbc.size()+" Bytes");
         } catch (IOException ex) {
             Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -111,5 +113,21 @@ public class FileHandler {
     public void setPacketSize(int packetSize){
         this.packetSize = packetSize;
     }
+
+    public int[] nextIntChunk(){
+
+        
+            // Read the bytes with the proper encoding for this platform.  If
+            // you skip this step, you might see something that looks like
+            // Chinese characters when you expect Latin-style characters.
+            //String encoding = System.getProperty("file.encoding");
+        byte[] nByteC = this.nextChunk();
+        Arrays.fill(nIntC, nByteC.length, 255, 0);
+
+        for(int i = 0;i<nByteC.length;i++)
+            nIntC[i] = (int) nByteC[i] & 0xFF;
+        return(nIntC);                
+}
+    
     
 }
