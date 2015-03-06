@@ -34,6 +34,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.lang.SystemUtils;
 
 /**
  * Read a File in defined chunks
@@ -52,8 +53,11 @@ public class FileHandler {
     private int[] nIntC = new int[256];
     
     public FileHandler(){
-        this.inputPath = Paths.get("C:/","erassm.gif");
-        this.packetSize = 4*1024;
+        if(SystemUtils.IS_OS_WINDOWS==true)
+            this.inputPath = Paths.get("C:/","erassm.gif");
+        else
+            this.inputPath = Paths.get("/Users/Amin/Desktop","erassm.gif");
+        this.packetSize = 128;  //256 - error correction bytes
         this.isFinished = false;
         this.chunkCounter = 0;
     }
@@ -98,6 +102,7 @@ public class FileHandler {
             System.out.println("File Size = "+sbc.size()+" Bytes");
         } catch (IOException ex) {
             Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(0);
         }
     this.chunkCounter = 0;
     buf = ByteBuffer.allocate(packetSize);        
@@ -122,7 +127,7 @@ public class FileHandler {
             // Chinese characters when you expect Latin-style characters.
             //String encoding = System.getProperty("file.encoding");
         byte[] nByteC = this.nextChunk();
-        Arrays.fill(nIntC, nByteC.length, 255, 0);
+        Arrays.fill(nIntC, nByteC.length, 256, 0);
 
         for(int i = 0;i<nByteC.length;i++)
             nIntC[i] = (int) nByteC[i] & 0xFF;

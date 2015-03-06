@@ -116,6 +116,11 @@ public class BarcodeGenerator {
         
     return frame;
     }
+    
+    public int getFrameCapacity(){
+        return((int) (width*height/100));
+    }
+            
 
 //    public void generateImage(){
 //        InputStream in = new ByteArrayInputStream(inputData);

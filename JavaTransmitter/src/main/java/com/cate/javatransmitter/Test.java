@@ -47,7 +47,7 @@ public class Test {
         File myFile = new File(filePath);
         int ecBytes=64;
         //generate random packet
-        int nOfBytes = 255;
+        int nOfBytes = 256;
         int[] testEncode=new int[nOfBytes];
         Random rand = new Random();
         for(int i=0;i<nOfBytes-ecBytes;i++)
@@ -70,24 +70,6 @@ public class Test {
 //        bitStream.setData(byteStream);
 //        for(int i=0; i<byteStream.length*8+10;i++)            
 //            System.out.println(Integer.toString(i)+" th bit is " + Integer.toString(bitStream.next()));
-        
-        FileHandler fH = new FileHandler();
-        fH.setPacketSize(nOfBytes-ecBytes);
-        fH.setFile();
-        int[] toEncode;
-        while(!fH.isFinished){
-            
-            toEncode = fH.nextIntChunk();
-            rsEncoder.encode(toEncode, ecBytes);
-            //Arrays.fill(toEncode, 0x00);
-        System.out.println(Arrays.toString(toEncode));
-        //rsEncoder.encode(testEncode, ecBytes);
-            //System.out.println((toEncode, StandardCharsets.UTF_8));
-        }
-        //System.out.println(((byte) -63) & 0xFF);
-        
-            //System.out.println(new String(fH.nextChunk(), StandardCharsets.UTF_8));
-        System.exit(0);
         
         //2D FFT
 //        FloatFFT_2D fft;
@@ -120,6 +102,33 @@ public class Test {
             toEncode1[i] = rand.nextInt(255);
         
         bGen.setParams(512, 512, 2);
+
+       
+        FileHandler fH = new FileHandler();
+        fH.setPacketSize(nOfBytes-ecBytes);
+        fH.setFile();
+        int[] toEncode;
+        int[] dataOfFrame = new int[bGen.getFrameCapacity()];
+        int chunksInFrame = dataOfFrame.length/nOfBytes;
+        int chunkCounter  = 0;
+        while(!fH.isFinished){
+            if(chunkCounter++ <= chunksInFrame){
+                toEncode = fH.nextIntChunk();
+                rsEncoder.encode(toEncode, ecBytes);
+                System.out.println(Arrays.toString(toEncode));
+            }
+            else{
+                System.out.println("Ready to send Frame");
+                chunkCounter  = 0;
+            }
+            //rsEncoder.encode(testEncode, ecBytes);
+            //System.out.println((toEncode, StandardCharsets.UTF_8));
+        }
+        //System.out.println(((byte) -63) & 0xFF);
+        
+            //System.out.println(new String(fH.nextChunk(), StandardCharsets.UTF_8));
+        System.exit(0);
+         
  
         try {
             Thread.sleep(2000);
