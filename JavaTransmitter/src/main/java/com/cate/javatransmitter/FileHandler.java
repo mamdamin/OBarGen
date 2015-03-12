@@ -53,10 +53,6 @@ public class FileHandler {
     private int[] nIntC = new int[256];
     
     public FileHandler(){
-        if(SystemUtils.IS_OS_WINDOWS==true)
-            this.inputPath = Paths.get("C:/","erassm.gif");
-        else
-            this.inputPath = Paths.get("/Users/Amin/Desktop","erassm.gif");
         this.packetSize = 128;  //256 - error correction bytes
         this.isFinished = false;
         this.chunkCounter = 0;
@@ -75,7 +71,7 @@ public class FileHandler {
             chunkCounter++;
             try {    
                 bytesRead = sbc.read(buf);
-                System.out.println(bytesRead);
+                //System.out.println(bytesRead);
             }
             catch (IOException ex) {
                 Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -92,7 +88,7 @@ public class FileHandler {
         return(Arrays.copyOf(buf.array(), bytesRead));                
 }
     
-    public void setFile(){
+    public void setFile(Path inputPath){
             //TODO add file selection
             this.inputPath = inputPath;
         try {

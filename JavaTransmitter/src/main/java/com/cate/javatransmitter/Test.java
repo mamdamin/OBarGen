@@ -22,9 +22,12 @@ import com.google.zxing.common.reedsolomon.ReedSolomonDecoder;
 import com.google.zxing.common.reedsolomon.ReedSolomonException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.lang.SystemUtils;
 
 import org.jtransforms.fft.FloatFFT_2D;
 
@@ -102,12 +105,16 @@ public class Test {
             toEncode1[i] = rand.nextInt(255);
         
         bGen.setParams(512, 512, 2);
-
+        Path inputPath;
+        if(SystemUtils.IS_OS_WINDOWS==true)
+            inputPath = Paths.get("C:\\Users\\Public\\Pictures\\Sample Pictures","Penguins.jpg");
+        else
+            inputPath = Paths.get("/Users/Amin/Desktop","erassm.gif");
        
         FileHandler fH = new FileHandler();
         fH.setPacketSize(nOfBytes-ecBytes);
-        fH.setFile();
-        int[] toEncode;
+        fH.setFile(inputPath);
+        int[] toEncode= new int[nOfBytes];
         int[] dataOfFrame = new int[bGen.getFrameCapacity()];
         int chunksInFrame = dataOfFrame.length/nOfBytes;
         int chunkCounter  = 0;
@@ -115,11 +122,19 @@ public class Test {
             if(chunkCounter++ <= chunksInFrame){
                 toEncode = fH.nextIntChunk();
                 rsEncoder.encode(toEncode, ecBytes);
-                System.out.println(Arrays.toString(toEncode));
+                //Arrays.
+                //System.out.println(Arrays.toString(toEncode));
             }
             else{
-                System.out.println("Ready to send Frame");
+                System.out.println("Ready to send Frame"+chunkCounter);
+                bGen.setData(toEncode);
+                swingContainer.showBarcode(bGen.modulateData());                
                 chunkCounter  = 0;
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
+                }                   
             }
             //rsEncoder.encode(testEncode, ecBytes);
             //System.out.println((toEncode, StandardCharsets.UTF_8));

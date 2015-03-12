@@ -118,7 +118,7 @@ public class BarcodeGenerator {
     }
     
     public int getFrameCapacity(){
-        return((int) (width*height/100));
+        return((int) (width*height/10));
     }
             
 
