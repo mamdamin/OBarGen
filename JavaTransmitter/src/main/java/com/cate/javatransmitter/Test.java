@@ -114,7 +114,7 @@ public class Test {
         FileHandler fH = new FileHandler();
         fH.setPacketSize(nOfBytes-ecBytes);
         fH.setFile(inputPath);
-        int[] toEncode= new int[nOfBytes];
+        int[] toEncode = new int[nOfBytes];
         int[] dataOfFrame = new int[bGen.getFrameCapacity()];
         int chunksInFrame = dataOfFrame.length/nOfBytes;
         int chunkCounter  = 0;
